@@ -2,18 +2,29 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAuth } from "@/src/features/auth/hooks/useAuth";
 
 export function Navbar() {
+  const { user, status, logout } = useAuth();
   const [abierto, setAbierto] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const links = [
     { href: "/", texto: "Inicio" },
     { href: "/catalogo", texto: "Catálogo" },
     { href: "/pedido", texto: "Hacer pedido" },
+    ...(user ? [{ href: "/mis-pedidos", texto: "Mis pedidos" }] : []),
+    ...(user?.role === "admin" ? [{ href: "/admin", texto: "Administración" }] : []),
   ];
+
+  function salir() {
+    logout();
+    setAbierto(false);
+    router.push("/");
+  }
 
   const claseLink = (href: string) =>
     `text-lg font-semibold transition hover:text-rosa-hover ${pathname === href ? "text-rosa-hover" : "text-rosa"}`;
@@ -32,6 +43,7 @@ export function Navbar() {
           />
         </Link>
 
+        {/* Botón hamburguesa (solo en móvil y tablet) */}
         <button
           className="text-3xl text-rosa lg:hidden"
           aria-label="Abrir menú"
@@ -54,6 +66,28 @@ export function Navbar() {
             ))}
           </ul>
 
+          {/* Zona de sesión: cambia según invitado / usuario / admin */}
+          <div className="flex items-center gap-3">
+            {status === "loading" ? null : user ? (
+              <>
+                <span className="font-semibold text-gris-oscuro">Hola, {user.nombre.split(" ")[0]}</span>
+                <button
+                  onClick={salir}
+                  className="rounded-full border-2 border-rosa px-4 py-1.5 font-semibold text-rosa transition hover:bg-rosa hover:text-white"
+                >
+                  Salir
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setAbierto(false)}
+                className="rounded-full bg-rosa px-5 py-2 font-semibold text-white transition hover:bg-rosa-hover"
+              >
+                Ingresar
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
     </header>

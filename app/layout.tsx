@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
 import "./globals.css";
+import { AuthProvider } from "@/src/features/auth/hooks/useAuth";
 import { Navbar } from "@/src/features/common/components/Navbar";
 import { Footer } from "@/src/features/common/components/Footer";
 
@@ -15,9 +16,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="es" className={exo.variable}>
       <body className="flex min-h-screen flex-col font-exo antialiased">
-        <Navbar />
-        <main className="flex-1 pt-28 pb-16">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-1 pt-28 pb-16">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
