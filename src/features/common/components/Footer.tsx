@@ -37,7 +37,7 @@ export function Footer() {
       </address>
 
       <div className="col-span-full border-t border-rosa pt-5 text-center">
-        <p className="text-sm text-[#999]">{new Date().getFullYear()} Sky V Cosmetics. Todos los derechos reservados.</p>
+        <p className="text-sm text-[#999]">2026 Sky V Cosmetics. Todos los derechos reservados.</p>
       </div>
     </footer>
   );
